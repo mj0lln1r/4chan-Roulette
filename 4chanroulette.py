@@ -7,7 +7,7 @@ def usage():
     print("OPTIONS:")
     print("\t-w, --work-safe\tOnly go to worksafe boards (default will give you either)")
     print("\t-b <board>\tAttempt to specify board (overrides worksafe argument)")
-    print("\t-s <search>\tWith -b (or without) attempt to find thread related to search term")
+    print("\t-s <search>\tWith -b (or without, if you feel lucky) attempt to find thread related to search term")
     print("\t-l, --words\tHave the progress bar print 4chans while fetching thread.")
     print("\t-h, --help\tDisplay this very text!")
 
