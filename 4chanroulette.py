@@ -7,7 +7,7 @@ def usage():
     print("OPTIONS:")
     print("\t-w, --work-safe\tOnly go to worksafe boards (default will give you either)")
     print("\t-b <board>\tAttempt to specify board (overrides worksafe argument)")
-    print("\t-s <search>\tWith -b (or without, if you feel lucky) attempt to find thread related to search term")
+    print("\t-s <search>\tWith -b (or without) attempt to find thread related to search term")
     print("\t-l, --words\tHave the progress bar print 4chans while fetching thread.")
     print("\t-h, --help\tDisplay this very text!")
 
@@ -91,39 +91,43 @@ def progress(lex):
     sys.stdout.write("\n")
 
 # Variables acted on by command options
-worksafe, lex, usr_board, search = False, False, "NOTHING", "NOTHING"
+def main():
+    worksafe, lex, usr_board, search = False, False, "NOTHING", "NOTHING"
+    
+    #Setup getopt options, and do as the user commands
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "wb:s:lh", ["work-safe", "words", "help"])
+    except getopt.GetoptError as err:
+        print( str(err))
+        sys.exit(2)
 
-#Setup getopt options, and do as the user commands
-try:
-    opts, args = getopt.getopt(sys.argv[1:], "wb:s:lh", ["work-safe", "words", "help"])
-except getopt.GetoptError as err:
-    print( str(err))
-    sys.exit(2)
-
-for o, a in opts:
-    if o in ( "-w", "--work-safe" ):
-        worksafe = True
-    elif o in ( "-b" ):
-        usr_board = a
-    elif o in ( "-s" ):
-        search = a
-    elif o in ( "-l", "--words" ):
-        lex = True
-    elif o in ( "-h", "--help" ):
-        usage()
-        sys.exit(0)
-    else:
-        assert False, "unhandled option"
+    for o, a in opts:
+        if o in ( "-w", "--work-safe" ):
+            worksafe = True
+        elif o in ( "-b" ):
+            usr_board = a
+        elif o in ( "-s" ):
+            search = a
+        elif o in ( "-l", "--words" ):
+            lex = True
+        elif o in ( "-h", "--help" ):
+            usage()
+            sys.exit(0)
+        else:
+            assert False, "unhandled option"
 
 # Start thread which gets the other kind of thread
-t = threading.Thread( target = get_random_thread, args=( usr_board, search, worksafe ))
-t.start()
+    t = threading.Thread( target = get_random_thread, args=( usr_board, search, worksafe ))
+    t.start()
 
-print("Reading the 4chans...\n")
+    print("Reading the 4chans...\n")
+    
+    # Print status bars while waiting
+    while (t.is_alive()):
+        progress(lex)
+        t.join(0.1)
+        
+    print("\nYou have a thread!")
 
-# Print status bars while waiting
-while (t.is_alive()):
-    progress(lex)
-    t.join(0.1)
-
-print("\nYou have a thread!")
+if ( __name__ == "__main__" ):
+    main()
