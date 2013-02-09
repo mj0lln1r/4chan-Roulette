@@ -45,10 +45,11 @@ def get_random_thread(usr_board, search_term, worksafe=False):
                 # Search OPs' comments and subject lines for search terms
                 com = "com" in athread and search_term.lower() not in athread["com"].lower()
                 sub = "sub" in athread and search_term.lower() not in athread["sub"].lower()
-                if (com or sub):
+                name = "name" in athread and search_term.lower() not in athread["name"].lower()
+                if (com or sub or name):
                     continue
                 # Don't add a thread to the list just because there's nothing to search!
-                elif ("com" not in athread and "sub" not in athread):
+                elif ("com" not in athread and "sub" not in athread and "name" not in athread):
                     continue
                 else:
                     matching_threads.append(athread)
