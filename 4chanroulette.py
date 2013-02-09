@@ -46,7 +46,7 @@ def get_random_thread(usr_board, search_term, worksafe=False):
                 com = "com" in athread and search_term.lower() not in athread["com"].lower()
                 sub = "sub" in athread and search_term.lower() not in athread["sub"].lower()
                 name = "name" in athread and search_term.lower() not in athread["name"].lower()
-                if (com or sub or name):
+                if (com and sub and name):
                     continue
                 # Don't add a thread to the list just because there's nothing to search!
                 elif ("com" not in athread and "sub" not in athread and "name" not in athread):
