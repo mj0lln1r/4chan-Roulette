@@ -43,18 +43,14 @@ def get_random_thread(usr_board, search_term, worksafe=False):
         for page in threads:
             for athread in page["threads"]:
                 # Search OPs' comments and subject lines for search terms
-                com = "com" in athread and search_term.lower() not in athread["com"].lower()
-                sub = "sub" in athread and search_term.lower() not in athread["sub"].lower()
-                name = "name" in athread and search_term.lower() not in athread["name"].lower()
-                if (com and sub and name):
-                    continue
-                # Don't add a thread to the list just because there's nothing to search!
-                elif ("com" not in athread and "sub" not in athread and "name" not in athread):
-                    continue
-                else:
+                com = "com" in athread and search_term.lower() in athread["com"].lower()
+                sub = "sub" in athread and search_term.lower() in athread["sub"].lower()
+                name = "name" in athread and search_term.lower() in athread["name"].lower()
+                if (com or sub or name):
                     matching_threads.append(athread)
                     found = True
-                    
+                else:
+                    continue
     if (found):            
         thread = random.choice(matching_threads)
     else:
